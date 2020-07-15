@@ -2010,9 +2010,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    source: String
+    source: String,
+    snackbar: false
   },
   data: function data() {
     return {
@@ -2053,6 +2069,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.$vuetify.theme.dark = true;
+    this.snackbar = true;
   }
 });
 
@@ -2205,7 +2222,14 @@ __webpack_require__.r(__webpack_exports__);
         'email': this.email,
         'password': this.password
       }).then(function (res) {
+        // console.dir(res);
         localStorage.setItem('token', res.data.token);
+
+        _this.$router.push('/admin').then(function (res) {
+          return console.log('LoggedIn Successfully');
+        })["catch"](function (err) {
+          return console.log(err);
+        });
       })["catch"](function (err) {
         console.log(err.response.data.status);
         _this.text = err.response.data.status;
@@ -19970,11 +19994,11 @@ var render = function() {
           }),
           _vm._v(" "),
           _c("v-icon", { staticClass: "mx-4", attrs: { large: "" } }, [
-            _vm._v("\n        mdi-youtube\n      ")
+            _vm._v("\n        mdi-laravel\n      ")
           ]),
           _vm._v(" "),
           _c("v-toolbar-title", { staticClass: "mr-12 align-center" }, [
-            _c("span", { staticClass: "title" }, [_vm._v("Youtube")])
+            _c("span", { staticClass: "title" }, [_vm._v("Laravel Vue")])
           ]),
           _vm._v(" "),
           _c("v-spacer"),
@@ -20013,7 +20037,62 @@ var render = function() {
               _c(
                 "v-row",
                 { attrs: { justify: "center", align: "center" } },
-                [_c("v-col")],
+                [
+                  _c(
+                    "v-col",
+                    [
+                      _c(
+                        "v-snackbar",
+                        {
+                          scopedSlots: _vm._u([
+                            {
+                              key: "action",
+                              fn: function(ref) {
+                                var attrs = ref.attrs
+                                return [
+                                  _c(
+                                    "v-btn",
+                                    _vm._b(
+                                      {
+                                        attrs: { color: "pink", text: "" },
+                                        on: {
+                                          click: function($event) {
+                                            _vm.snackbar = false
+                                          }
+                                        }
+                                      },
+                                      "v-btn",
+                                      attrs,
+                                      false
+                                    ),
+                                    [
+                                      _vm._v(
+                                        "\n                        Close\n                        "
+                                      )
+                                    ]
+                                  )
+                                ]
+                              }
+                            }
+                          ]),
+                          model: {
+                            value: _vm.snackbar,
+                            callback: function($$v) {
+                              _vm.snackbar = $$v
+                            },
+                            expression: "snackbar"
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                    You are loggedin Successfully\n\n                    "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ],
                 1
               )
             ],

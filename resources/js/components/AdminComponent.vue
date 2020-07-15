@@ -65,10 +65,10 @@
         class="mx-4"
         large
       >
-        mdi-youtube
+        mdi-laravel
       </v-icon>
       <v-toolbar-title class="mr-12 align-center">
-        <span class="title">Youtube</span>
+        <span class="title">Laravel Vue</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-row
@@ -93,7 +93,22 @@
           align="center"
         >
           <v-col>
-            
+                <v-snackbar
+                    v-model="snackbar"
+                    >
+                    You are loggedin Successfully
+
+                    <template v-slot:action="{ attrs }">
+                        <v-btn
+                        color="pink"
+                        text
+                        v-bind="attrs"
+                        @click="snackbar = false"
+                        >
+                        Close
+                        </v-btn>
+                    </template>
+                </v-snackbar>
           </v-col>
         </v-row>
       </v-container>
@@ -104,6 +119,7 @@
 	export default {
 		props: {
 	      source: String,
+          snackbar: false,
 	    },
 	    data: () => ({
 	      drawer: null,
@@ -124,6 +140,7 @@
 	    }),
 	    created () {
 	      this.$vuetify.theme.dark = true
+          this.snackbar = true
 	    },
 	}
 </script>

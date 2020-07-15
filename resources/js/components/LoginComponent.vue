@@ -112,7 +112,11 @@ export default {
                 'password': this.password,
             })
             .then(res => {
+                // console.dir(res);
                 localStorage.setItem('token', res.data.token);
+                this.$router.push('/admin')
+                .then(res => console.log('LoggedIn Successfully'))
+                .catch(err => console.log(err))
             })
             .catch(err => {
                 console.log(err.response.data.status);
