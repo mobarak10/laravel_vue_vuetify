@@ -2027,27 +2027,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    source: String,
-    snackbar: false
+    source: String
   },
   data: function data() {
     return {
+      snackbar: false,
       drawer: null,
       items: [{
-        icon: 'mdi-trending-up',
-        text: 'Most Popular'
+        icon: 'mdi-account',
+        text: 'User'
       }, {
-        icon: 'mdi-youtube-subscription',
-        text: 'Subscriptions'
+        icon: 'mdi-post-outline',
+        text: 'Post'
       }, {
-        icon: 'mdi-history',
-        text: 'History'
+        icon: 'mdi-book-open-page-variant',
+        text: 'Pages'
       }, {
-        icon: 'mdi-playlist-play',
-        text: 'Playlists'
+        icon: 'mdi-briefcase-edit-outline',
+        text: 'Category'
       }, {
-        icon: 'mdi-clock',
-        text: 'Watch Later'
+        icon: 'mdi-badge-account-outline',
+        text: 'Roles'
       }],
       items2: [{
         picture: 28,
@@ -2067,9 +2067,22 @@ __webpack_require__.r(__webpack_exports__);
       }]
     };
   },
+  methods: {
+    logout: function logout() {
+      localStorage.removeItem('token');
+      this.$router.push('/login').then(function (res) {
+        return console.log('Loggedout Successfully');
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    }
+  },
+  mounted: function mounted() {
+    this.snackbar = localStorage.getItem('loggedIn') ? true : false;
+    localStorage.removeItem('loggedIn');
+  },
   created: function created() {
     this.$vuetify.theme.dark = true;
-    this.snackbar = true;
   }
 });
 
@@ -2186,14 +2199,42 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      valid: true,
       email: '',
       password: '',
       loading: false,
       snackbar: false,
-      text: ''
+      text: '',
+      emailRules: [function (v) {
+        return !!v || 'E-mail is required';
+      }, function (v) {
+        return /.+@.+\..+/.test(v) || 'E-mail must be valid';
+      }],
+      passwordRules: [function (v) {
+        return !!v || 'E-mail is required';
+      }, function (v) {
+        return v && v.length <= 8 || 'Password must be less than 8 characters';
+      }]
     };
   },
   methods: {
@@ -2224,6 +2265,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         // console.dir(res);
         localStorage.setItem('token', res.data.token);
+        localStorage.setItem('loggedIn', true);
 
         _this.$router.push('/admin').then(function (res) {
           return console.log('LoggedIn Successfully');
@@ -19953,13 +19995,13 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "v-list-item",
-                { attrs: { link: "" } },
+                { attrs: { link: "" }, on: { click: _vm.logout } },
                 [
                   _c(
                     "v-list-item-action",
                     [
                       _c("v-icon", { attrs: { color: "grey darken-1" } }, [
-                        _vm._v("mdi-cog")
+                        _vm._v("mdi-logout")
                       ])
                     ],
                     1
@@ -19968,7 +20010,7 @@ var render = function() {
                   _c(
                     "v-list-item-title",
                     { staticClass: "grey--text text--darken-1" },
-                    [_vm._v("Manage Subscriptions")]
+                    [_vm._v("Logout")]
                   )
                 ],
                 1
@@ -20200,14 +20242,26 @@ var render = function() {
                               _vm._v(" "),
                               _c(
                                 "v-form",
+                                {
+                                  ref: "form",
+                                  model: {
+                                    value: _vm.valid,
+                                    callback: function($$v) {
+                                      _vm.valid = $$v
+                                    },
+                                    expression: "valid"
+                                  }
+                                },
                                 [
                                   _c("v-text-field", {
                                     attrs: {
                                       color: "red",
                                       label: "Login",
                                       name: "login",
+                                      rules: _vm.emailRules,
                                       "prepend-icon": "mdi-account",
-                                      type: "email"
+                                      type: "email",
+                                      required: ""
                                     },
                                     model: {
                                       value: _vm.email,
@@ -20223,9 +20277,12 @@ var render = function() {
                                       color: "red",
                                       id: "password",
                                       label: "Password",
+                                      counter: 8,
+                                      rules: _vm.passwordRules,
                                       name: "password",
                                       "prepend-icon": "mdi-lock",
-                                      type: "password"
+                                      type: "password",
+                                      required: ""
                                     },
                                     model: {
                                       value: _vm.password,
@@ -20250,10 +20307,17 @@ var render = function() {
                               _c(
                                 "v-btn",
                                 {
-                                  attrs: { color: "error" },
+                                  attrs: {
+                                    color: "error",
+                                    disabled: !_vm.valid
+                                  },
                                   on: { click: _vm.login }
                                 },
-                                [_vm._v("Login")]
+                                [
+                                  _vm._v(
+                                    "\n                            Login\n                            "
+                                  )
+                                ]
                               )
                             ],
                             1

@@ -45,11 +45,11 @@
           </v-list-item-action>
           <v-list-item-title class="grey--text text--darken-1">Browse Channels</v-list-item-title>
         </v-list-item>
-        <v-list-item link>
+        <v-list-item link @click="logout">
           <v-list-item-action>
-            <v-icon color="grey darken-1">mdi-cog</v-icon>
+            <v-icon color="grey darken-1">mdi-logout</v-icon>
           </v-list-item-action>
-          <v-list-item-title class="grey--text text--darken-1">Manage Subscriptions</v-list-item-title>
+          <v-list-item-title class="grey--text text--darken-1">Logout</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -119,28 +119,41 @@
 	export default {
 		props: {
 	      source: String,
-          snackbar: false,
 	    },
 	    data: () => ({
-	      drawer: null,
-	      items: [
-	        { icon: 'mdi-trending-up', text: 'Most Popular' },
-	        { icon: 'mdi-youtube-subscription', text: 'Subscriptions' },
-	        { icon: 'mdi-history', text: 'History' },
-	        { icon: 'mdi-playlist-play', text: 'Playlists' },
-	        { icon: 'mdi-clock', text: 'Watch Later' },
-	      ],
-	      items2: [
-	        { picture: 28, text: 'Joseph' },
-	        { picture: 38, text: 'Apple' },
-	        { picture: 48, text: 'Xbox Ahoy' },
-	        { picture: 58, text: 'Nokia' },
-	        { picture: 78, text: 'MKBHD' },
-	      ],
+            snackbar: false,
+            drawer: null,
+            items: [
+                { icon: 'mdi-account', text: 'User' },
+                { icon: 'mdi-post-outline', text: 'Post' },
+                { icon: 'mdi-book-open-page-variant', text: 'Pages' },
+                { icon: 'mdi-briefcase-edit-outline', text: 'Category' },
+                { icon: 'mdi-badge-account-outline', text: 'Roles' },
+            ],
+            items2: [
+                { picture: 28, text: 'Joseph' },
+                { picture: 38, text: 'Apple' },
+                { picture: 48, text: 'Xbox Ahoy' },
+                { picture: 58, text: 'Nokia' },
+                { picture: 78, text: 'MKBHD' },
+            ],
 	    }),
+        methods:{
+            logout: function(){
+                localStorage.removeItem('token');
+                this.$router.push('/login')
+                .then(res => console.log('Loggedout Successfully'))
+                .catch(err => console.log(err))
+            }
+        },
+
+        mounted(){
+            this.snackbar = localStorage.getItem('loggedIn') ? true : false;
+            localStorage.removeItem('loggedIn')
+        },
 	    created () {
 	      this.$vuetify.theme.dark = true
-          this.snackbar = true
+          
 	    },
 	}
 </script>

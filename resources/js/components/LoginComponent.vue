@@ -32,27 +32,44 @@
                                 top
                                 color="deep-purple accent-4"
                                 ></v-progress-linear>
-                                <v-form>
+                                <v-form
+                                    ref="form"
+                                    v-model="valid"
+                                >
                                     <v-text-field color="red"
                                     label="Login"
                                     name="login"
                                     v-model="email"
+                                    :rules="emailRules"
                                     prepend-icon="mdi-account"
                                     type="email"
-                                    ></v-text-field>
+                                    required
+                                    >
+                                    </v-text-field>
+
                                     <v-text-field color="red"
                                     id="password"
                                     label="Password"
+                                    :counter="8"
+                                    :rules="passwordRules"
                                     v-model="password"
                                     name="password"
                                     prepend-icon="mdi-lock"
                                     type="password"
-                                    ></v-text-field>
+                                    required
+                                    >
+                                    </v-text-field>
                                 </v-form>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="error" @click='login'>Login</v-btn>
+                                <v-btn 
+                                color="error" 
+                                @click='login'
+                                :disabled="!valid"
+                                >
+                                Login
+                                </v-btn>
                             </v-card-actions>
                         </v-card>
                         <v-snackbar
@@ -81,11 +98,20 @@
 export default {
     data(){
         return{
+            valid: true,
             email: '',
             password: '',
             loading: false,
             snackbar: false,
             text: '',
+            emailRules: [
+                v => !!v || 'E-mail is required',
+                v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+            ],
+            passwordRules: [
+                v => !!v || 'E-mail is required',
+                v => (v && v.length <= 8) || 'Password must be less than 8 characters'
+            ],
         }
     },
     methods:{
@@ -113,7 +139,8 @@ export default {
             })
             .then(res => {
                 // console.dir(res);
-                localStorage.setItem('token', res.data.token);
+                localStorage.setItem('token', res.data.token)
+                localStorage.setItem('loggedIn', true)
                 this.$router.push('/admin')
                 .then(res => console.log('LoggedIn Successfully'))
                 .catch(err => console.log(err))
