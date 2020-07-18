@@ -50,7 +50,6 @@
                                     <v-text-field color="red"
                                     id="password"
                                     label="Password"
-                                    :counter="8"
                                     :rules="passwordRules"
                                     v-model="password"
                                     name="password"
@@ -109,8 +108,8 @@ export default {
                 v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
             ],
             passwordRules: [
-                v => !!v || 'E-mail is required',
-                v => (v && v.length <= 8) || 'Password must be less than 8 characters'
+                v => !!v || 'Password is required',
+                // v => (v && v.length <= 8) || 'Password must be less than 8 characters'
             ],
         }
     },
