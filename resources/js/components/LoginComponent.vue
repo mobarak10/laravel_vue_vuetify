@@ -63,11 +63,11 @@
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn 
-                                color="error" 
-                                @click='login'
-                                :disabled="!valid"
-                                >
-                                Login
+                                    color="error" 
+                                    @click='login'
+                                    :disabled="!valid"
+                                    >
+                                    Login
                                 </v-btn>
                             </v-card-actions>
                         </v-card>

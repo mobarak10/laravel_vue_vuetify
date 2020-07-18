@@ -20267,7 +20267,7 @@ var render = function() {
                     [
                       _c("v-switch", {
                         staticClass: "ma-4",
-                        attrs: { color: "error", label: "Switch Theme" },
+                        attrs: { color: "pink", label: "Switch Theme" },
                         model: {
                           value: _vm.theme,
                           callback: function($$v) {
@@ -20612,7 +20612,7 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                            Login\n                            "
+                                    "\n                                Login\n                            "
                                   )
                                 ]
                               )

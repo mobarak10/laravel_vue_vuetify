@@ -49,7 +49,7 @@
                 >
                     <v-list-item-title class="grey--text text--darken-1">
                         <v-switch 
-                            color="error" 
+                            color="pink" 
                             v-model="theme" 
                             class="ma-4"  
                             label="Switch Theme"
