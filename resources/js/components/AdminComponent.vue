@@ -144,11 +144,11 @@
             drawer: null,
             theme: true,
             items: [
-                { icon: 'mdi-account', text: 'User', action:'admin/users' },
-                { icon: 'mdi-post-outline', text: 'Post', action:'admin/posts' },
-                { icon: 'mdi-book-open-page-variant', text: 'Pages', action:'admin/pages' },
-                { icon: 'mdi-briefcase-edit-outline', text: 'Category', action:'admin/categories' },
-                { icon: 'mdi-badge-account-outline', text: 'Roles', action:'admin/roles' },
+                { icon: 'mdi-account', text: 'User', action:'users' },
+                { icon: 'mdi-post-outline', text: 'Post', action:'posts' },
+                { icon: 'mdi-book-open-page-variant', text: 'Pages', action:'pages' },
+                { icon: 'mdi-briefcase-edit-outline', text: 'Category', action:'categories' },
+                { icon: 'mdi-badge-account-outline', text: 'Roles', action:'roles' },
             ],
             items2: [
                 { picture: 28, text: 'Joseph' },
