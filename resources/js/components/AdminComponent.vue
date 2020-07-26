@@ -148,7 +148,7 @@
                 { icon: 'mdi-post-outline', text: 'Post', action:'posts' },
                 { icon: 'mdi-book-open-page-variant', text: 'Pages', action:'pages' },
                 { icon: 'mdi-briefcase-edit-outline', text: 'Category', action:'categories' },
-                { icon: 'mdi-badge-account-outline', text: 'Roles', action:'roles' },
+                { icon: 'mdi-badge-account-outline', text: 'Roles', action:'admin/roles' },
             ],
             items2: [
                 { picture: 28, text: 'Joseph' },
