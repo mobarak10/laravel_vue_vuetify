@@ -6,8 +6,17 @@
         item-key="name" 
         loading-text="Loading... Please wait"
         :headers="headers"
-        :items="roles"
+        @pagination="paginate"
+        :items="roles.data"
+        :server-items-length="roles.total"
         sort-by="calories"
+        :items-per-page = 5
+        :footer-props="{
+            'items-per-page-options': [5,10,15],
+            itemsPerPageText: 'Roles per page',
+            // 'show-current-page': true,
+            // 'show-first-last-page': true,
+        }"
     >
         <template v-slot:top>
             <v-toolbar flat color="dark">
@@ -80,7 +89,7 @@
     <v-snackbar
         v-model="snackbar"
         >
-            {{ text }}
+            {{ snackbar_text }}
             <template v-slot:action="{ attrs }">
                 <v-btn
                 color="error"
@@ -101,13 +110,13 @@
             dialog: false,
             loading: false,
             snackbar: false,
+            snackbar_text: '',
             headers: [
             {
             text: '#',
             align: 'start',
             sortable: false,
             value: 'id',
-            text: '',
             },
             { text: 'Name', value: 'name' },
             { text: 'Created at', value: 'created_at' },
@@ -150,6 +159,17 @@
         },
 
         methods: {
+            paginate(e){
+                console.dir(e)
+                axios.get(`/api/roles?page = ${e.page}`, {params:{'per_page': e.itemsPerPage}})
+                .then(res=> this.roles = res.data.roles)
+                .catch(err => {
+                    if(err.response.status == 401)
+                    this.$router.push('/login')
+                    localStorage.removeItem('token')
+                })
+            },
+
             initialize () {
                 // Add a request interceptor
                 axios.interceptors.request.use((config) => {
@@ -168,36 +188,28 @@
                     this.loading = false
                     return Promise.reject(error);
                 });
-
-                axios.get('/api/roles', {})
-                .then(res=> this.roles = res.data.roles)
-                .catch(err => {
-                    if(err.response.status == 401)
-                    this.$router.push('/login')
-                    localStorage.removeItem('token')
-                })
             },
 
             editItem (item) {
-                this.editedIndex = this.roles.indexOf(item)
+                this.editedIndex = this.roles.data.indexOf(item)
                 this.editedItem = Object.assign({}, item)
                 this.dialog = true
             },
 
             deleteItem (item) {
-                const index = this.roles.indexOf(item)
+                const index = this.roles.data.indexOf(item)
                 let decide = confirm('Are you sure you want to delete this item?')
                 if(decide){
-                    axios.delete('api/roles/'+item.id)
+                    axios.delete('api/roles/'+item.id) 
                     .then(res => {
                         this.snackbar = true
-                        this.text = "Roles deleted succesfully"
-                        this.roles.splice(index, 1)
+                        this.snackbar_text = "Roles deleted succesfully"
+                        this.roles.data.splice(index, 1)
                     })
                     .catch(err => {
                         console.log(err.response)
                         this.snackbar = true
-                        this.text = "Something went wrong!"
+                        this.snackbar_text = "Something went wrong!"
                     })
                 }
             },
@@ -220,20 +232,20 @@
                         // console.log(res.data.role)
                         const role = res.data.role // get edited item pass from controller
                         // console.log(this.roles)
-                        const role_ids = this.roles.map(item => {
+                        const role_ids = this.roles.data.map(item => {
                             return item.id // get all id of roles array
                         })
                         // console.log(role_ids)
                         const index_of_role = role_ids.indexOf(role.id) // get edited item id
                         // console.log(index_of_role)
-                        this.roles.splice(index_of_role, 1, role) // in splice method first argument is which is deleted, secound argument is number of deleted item, third argument is new insert item.
+                        this.roles.data.splice(index_of_role, 1, role) // in splice method first argument is which is deleted, secound argument is number of deleted item, third argument is new insert item.
                         this.snackbar = true
-                        this.text = "Role updated succesfully!"
+                        this.snackbar_text = "Role updated succesfully!"
                     })
                     .catch(err => {
                         console.log(err.response)
                         this.snackbar = true
-                        this.text = "Something went wrong!"
+                        this.snackbar_text = "Something went wrong!"
                     })
                     // Object.assign(this.roles[this.editedIndex], this.editedItem)
                 } else {
@@ -242,13 +254,13 @@
                     })
                     .then(res => {
                         this.snackbar = true
-                        this.text = "Roles added succesfully"
-                        this.roles.push(res.data.role)
+                        this.snackbar_text = "Roles added succesfully"
+                        this.roles.data.push(res.data.role)
                     })
                     .catch(err => {
                         console.dir(err.response)
                         this.snackbar = true
-                        this.text = "Something went wrong!"
+                        this.snackbar_text = "Something went wrong!"
                     })
                 }
                 this.close()

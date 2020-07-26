@@ -2323,8 +2323,15 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2428,12 +2435,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       dialog: false,
       loading: false,
       snackbar: false,
-      headers: [_defineProperty({
+      snackbar_text: '',
+      headers: [{
         text: '#',
         align: 'start',
         sortable: false,
         value: 'id'
-      }, "text", ''), {
+      }, {
         text: 'Name',
         value: 'name'
       }, {
@@ -2477,69 +2485,78 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.initialize();
   },
   methods: {
-    initialize: function initialize() {
+    paginate: function paginate(e) {
       var _this = this;
 
-      // Add a request interceptor
-      axios.interceptors.request.use(function (config) {
-        _this.loading = true; // 
-
-        return config;
-      }, function (error) {
-        _this.loading = false;
-        return Promise.reject(error);
-      }); // Add a response interceptor
-
-      axios.interceptors.response.use(function (response) {
-        _this.loading = false; // 
-
-        return response;
-      }, function (error) {
-        _this.loading = false;
-        return Promise.reject(error);
-      });
-      axios.get('/api/roles', {}).then(function (res) {
+      console.dir(e);
+      axios.get("/api/roles?page = ".concat(e.page), {
+        params: {
+          'per_page': e.itemsPerPage
+        }
+      }).then(function (res) {
         return _this.roles = res.data.roles;
       })["catch"](function (err) {
         if (err.response.status == 401) _this.$router.push('/login');
         localStorage.removeItem('token');
       });
     },
+    initialize: function initialize() {
+      var _this2 = this;
+
+      // Add a request interceptor
+      axios.interceptors.request.use(function (config) {
+        _this2.loading = true; // 
+
+        return config;
+      }, function (error) {
+        _this2.loading = false;
+        return Promise.reject(error);
+      }); // Add a response interceptor
+
+      axios.interceptors.response.use(function (response) {
+        _this2.loading = false; // 
+
+        return response;
+      }, function (error) {
+        _this2.loading = false;
+        return Promise.reject(error);
+      });
+    },
     editItem: function editItem(item) {
-      this.editedIndex = this.roles.indexOf(item);
+      this.editedIndex = this.roles.data.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
     deleteItem: function deleteItem(item) {
-      var _this2 = this;
+      var _this3 = this;
 
-      var index = this.roles.indexOf(item);
+      var index = this.roles.data.indexOf(item);
       var decide = confirm('Are you sure you want to delete this item?');
 
       if (decide) {
         axios["delete"]('api/roles/' + item.id).then(function (res) {
-          _this2.snackbar = true;
-          _this2.text = "Roles deleted succesfully";
+          _this3.snackbar = true;
+          _this3.snackbar_text = "Roles deleted succesfully";
 
-          _this2.roles.splice(index, 1);
+          _this3.roles.data.splice(index, 1);
         })["catch"](function (err) {
           console.log(err.response);
-          _this2.snackbar = true;
-          _this2.text = "Something went wrong!";
+          _this3.snackbar = true;
+          _this3.snackbar_text = "Something went wrong!";
         });
       }
     },
     close: function close() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.dialog = false;
       this.$nextTick(function () {
-        _this3.editedItem = Object.assign({}, _this3.defaultItem);
-        _this3.editedIndex = -1;
+        _this4.editedItem = Object.assign({}, _this4.defaultItem);
+        _this4.editedIndex = -1;
       });
     },
     save: function save() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this.editedIndex > -1) {
         // console.log(this.editedItem)
@@ -2550,7 +2567,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           var role = res.data.role; // get edited item pass from controller
           // console.log(this.roles)
 
-          var role_ids = _this4.roles.map(function (item) {
+          var role_ids = _this5.roles.data.map(function (item) {
             return item.id; // get all id of roles array
           }); // console.log(role_ids)
 
@@ -2558,28 +2575,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           var index_of_role = role_ids.indexOf(role.id); // get edited item id
           // console.log(index_of_role)
 
-          _this4.roles.splice(index_of_role, 1, role); // in splice method first argument is which is deleted, secound argument is number of deleted item, third argument is new insert item.
+          _this5.roles.data.splice(index_of_role, 1, role); // in splice method first argument is which is deleted, secound argument is number of deleted item, third argument is new insert item.
 
 
-          _this4.snackbar = true;
-          _this4.text = "Role updated succesfully!";
+          _this5.snackbar = true;
+          _this5.snackbar_text = "Role updated succesfully!";
         })["catch"](function (err) {
           console.log(err.response);
-          _this4.snackbar = true;
-          _this4.text = "Something went wrong!";
+          _this5.snackbar = true;
+          _this5.snackbar_text = "Something went wrong!";
         }); // Object.assign(this.roles[this.editedIndex], this.editedItem)
       } else {
         axios.post('api/roles', {
           'name': this.editedItem.name
         }).then(function (res) {
-          _this4.snackbar = true;
-          _this4.text = "Roles added succesfully";
+          _this5.snackbar = true;
+          _this5.snackbar_text = "Roles added succesfully";
 
-          _this4.roles.push(res.data.role);
+          _this5.roles.data.push(res.data.role);
         })["catch"](function (err) {
           console.dir(err.response);
-          _this4.snackbar = true;
-          _this4.text = "Something went wrong!";
+          _this5.snackbar = true;
+          _this5.snackbar_text = "Something went wrong!";
         });
       }
 
@@ -20738,9 +20755,18 @@ var render = function() {
           "item-key": "name",
           "loading-text": "Loading... Please wait",
           headers: _vm.headers,
-          items: _vm.roles,
-          "sort-by": "calories"
+          items: _vm.roles.data,
+          "server-items-length": _vm.roles.total,
+          "sort-by": "calories",
+          "items-per-page": 5,
+          "footer-props": {
+            "items-per-page-options": [5, 10, 15],
+            itemsPerPageText: "Roles per page"
+            // 'show-current-page': true,
+            // 'show-first-last-page': true,
+          }
         },
+        on: { pagination: _vm.paginate },
         scopedSlots: _vm._u([
           {
             key: "top",
@@ -20987,7 +21013,7 @@ var render = function() {
             expression: "snackbar"
           }
         },
-        [_vm._v("\n        " + _vm._s(_vm.text) + "\n        ")]
+        [_vm._v("\n        " + _vm._s(_vm.snackbar_text) + "\n        ")]
       )
     ],
     1
